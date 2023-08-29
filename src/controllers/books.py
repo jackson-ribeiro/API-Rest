@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Api, Resource
 
 from src.server.instance import server
+from src.models.books import book
 
 app, api = server.app, server.api
 
@@ -14,11 +15,14 @@ books = [
 
 @api.route("/books")
 class BookList(Resource):
+    @api.marshal_list_with(book)
     def get(
         self,
     ):
         return books
 
+    @api.expect(book, validate=True)
+    @api.marshal_with(book)
     def post(
         self,
     ):
